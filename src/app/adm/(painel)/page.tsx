@@ -85,7 +85,11 @@ export default async function VisaoGeral() {
           {total === 0 && (
             <EstadoVazio
               titulo="Ainda não há alunos cadastrados"
-              descricao="A importação em lote da base de alunos será a próxima funcionalidade liberada."
+              descricao={
+                u.permissoes.includes("ALUNOS_IMPORTAR")
+                  ? "Use o menu Importações para carregar a base de alunos a partir de uma planilha."
+                  : "Os alunos aparecerão aqui depois da primeira importação."
+              }
             />
           )}
         </div>

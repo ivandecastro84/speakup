@@ -30,6 +30,17 @@ function statusDe(code: string | undefined): number {
   return 500;
 }
 
+/**
+ * Mesma semântica do PostgREST: objetos e listas de objetos vão como JSON;
+ * listas de texto vão como array do Postgres (ex.: text[]).
+ */
+function paraPostgres(v: unknown): unknown {
+  if (v === null || v === undefined) return null;
+  if (Array.isArray(v)) return v.some((x) => x !== null && typeof x === "object") ? JSON.stringify(v) : v;
+  if (typeof v === "object" && !(v instanceof Date)) return JSON.stringify(v);
+  return v;
+}
+
 let pool: pg.Pool | null = null;
 let supabase: SupabaseClient | null = null;
 
@@ -46,7 +57,7 @@ async function viaPostgres<T>(fn: string, args: Args): Promise<T> {
     await client.query("set local role anon");
     const r = await client.query(
       `select public.${fn}(${params.join(", ")}) as r`,
-      chaves.map((k) => args[k]),
+      chaves.map((k) => paraPostgres(args[k])),
     );
     await client.query("commit");
     return r.rows[0].r as T;

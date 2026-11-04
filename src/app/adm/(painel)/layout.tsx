@@ -6,6 +6,7 @@ import { Logo } from "@/components/ui";
 
 const ITENS: { href: string; rotulo: string; permissao?: Permissao }[] = [
   { href: "/adm", rotulo: "Visão geral" },
+  { href: "/adm/importacoes", rotulo: "Importações", permissao: "ALUNOS_IMPORTAR" },
   { href: "/adm/unidades", rotulo: "Unidades", permissao: "UNIDADES_GERENCIAR" },
   { href: "/adm/usuarios", rotulo: "Usuários", permissao: "USUARIOS_GERENCIAR" },
   { href: "/adm/auditoria", rotulo: "Auditoria", permissao: "AUDITORIA_LER" },

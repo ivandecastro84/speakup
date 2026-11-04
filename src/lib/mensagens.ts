@@ -16,6 +16,8 @@ const MENSAGENS: Record<string, string> = {
   UNIDADE_INEXISTENTE: "Uma das unidades selecionadas não existe.",
   UNIDADE_JA_EXISTE: "Já existe uma unidade com este nome.",
   SEM_PERMISSAO: "Você não tem permissão para esta ação.",
+  IMPORTACAO_NAO_ENCONTRADA: "Importação não encontrada.",
+  IMPORTACAO_ENCERRADA: "Esta importação já foi encerrada.",
   CAMPOS_OBRIGATORIOS: "Preencha todos os campos obrigatórios.",
 };
 

@@ -50,7 +50,13 @@ npm test
 ```
 
 Os testes recriam o banco `speakup_test` do zero a partir das migrações e verificam os critérios de
-aceite (J-A*, J-B*, J-H*) chamando as RPCs com o papel `anon`, como acontece em produção.
+aceite (J-A*, J-B*, J-C*, J-H*) chamando as RPCs com o papel `anon`, como acontece em produção.
+
+## Importação de alunos
+
+Painel ADM → **Importações** → **Importar alunos**. Aceita `.xlsx` ou `.csv` com exatamente as 19 colunas
+oficiais, na ordem. Variáveis opcionais: `IMPORT_ATOMIC`, `IMPORT_MAX_MB`, `IMPORT_MAX_LINHAS`,
+`IMPORT_ASYNC_A_PARTIR_DE` (ver `DECISOES.md`, D22 e D23).
 
 ## Banco de produção
 
@@ -67,7 +73,7 @@ values ('voce@empresa.com', 'Seu Nome', extensions.crypt('SUA-SENHA-FORTE', exte
 | Etapa | Escopo | Situação |
 |------|--------|----------|
 | K1 | Fundações, autenticação de aluno e ADM, RBAC, auditoria, layout base | ✅ concluída |
-| K2 | Importação em lote (.xlsx/.csv) | aguardando |
+| K2 | Importação em lote (.xlsx/.csv) | ✅ concluída |
 | K3 | Painel de alunos, turmas, professores e grade | aguardando |
 | K4 | Motor de agendamento e dashboard do aluno | aguardando |
 | K5 | Relatórios de RH e notas | aguardando |
