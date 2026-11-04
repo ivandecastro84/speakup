@@ -110,6 +110,17 @@ h2 {
   letter-spacing: -0.01em;
 }
 
+/* Logo: uma arte por tema (ver Logo em components/ui.tsx). */
+.logo-claro {
+  display: none;
+}
+[data-theme="light"] .logo-claro {
+  display: block;
+}
+[data-theme="light"] .logo-escuro {
+  display: none;
+}
+
 /* Foco sempre visível para navegação por teclado (H.3). */
 :focus-visible {
   outline: 3px solid var(--cor-destaque);

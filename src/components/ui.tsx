@@ -111,19 +111,31 @@ export function Marca({ className, sufixo = true }: { className?: string; sufixo
 }
 
 /**
- * Logo oficial (arte para fundo claro). Fica sempre sobre uma placa branca,
- * para manter o navy legível também no tema escuro.
+ * Logo oficial, fundo transparente. Tema escuro: versão negativa (branco +
+ * vermelho); tema claro: versão original (navy + vermelho). A troca é feita
+ * por CSS (globals.css), sem depender de JavaScript.
  */
 export function Logo({ largura = 220, className, prioridade }: { largura?: number; className?: string; prioridade?: boolean }) {
+  const estilo = { width: largura, height: "auto" } as const;
   return (
-    <span className={cx("inline-block rounded-padrao bg-white p-3", className)}>
+    <span className={cx("inline-block", className)}>
+      <Image
+        src="/logo-speakup-negativo.webp"
+        alt="Speak Up Idiomas"
+        width={1394}
+        height={760}
+        priority={prioridade}
+        className="logo-escuro"
+        style={estilo}
+      />
       <Image
         src="/logo-speakup.webp"
         alt="Speak Up Idiomas"
         width={1394}
         height={760}
         priority={prioridade}
-        style={{ width: largura, height: "auto" }}
+        className="logo-claro"
+        style={estilo}
       />
     </span>
   );
