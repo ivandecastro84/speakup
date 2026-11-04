@@ -69,7 +69,7 @@ export function FormCriarUsuario({ unidades }: { unidades: string[] }) {
               name="papel"
               required
               defaultValue={estado.valores?.papel ?? ""}
-              className="min-h-11 rounded-padrao border border-borda bg-superficie px-3"
+              className="min-h-11 rounded-padrao border border-borda-campo bg-superficie px-3 text-texto"
             >
               <option value="" disabled>
                 Selecione…
@@ -90,7 +90,7 @@ export function FormCriarUsuario({ unidades }: { unidades: string[] }) {
               <div className="flex flex-wrap gap-x-5 gap-y-2">
                 {unidades.map((u) => (
                   <label key={u} className="flex min-h-11 items-center gap-2 text-sm">
-                    <input type="checkbox" name="unidades" value={u} className="size-5" />
+                    <input type="checkbox" name="unidades" value={u} className="size-5 accent-destaque" />
                     {u}
                   </label>
                 ))}

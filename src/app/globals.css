@@ -1,43 +1,87 @@
 @import "tailwindcss";
 
 /*
- * Tokens de design — arquivo único para troca posterior da identidade visual.
- * [DECISÃO PENDENTE] Sem brand book: tipografia system-ui, paleta neutra e
- * uma única cor de destaque. Todas as combinações de texto/fundo abaixo
- * atendem contraste WCAG AA (>= 4,5:1).
+ * Tokens de design — SpeakUp Design System.
+ * Fonte da verdade: https://claude.ai/artifact/DN8FhJQpCbMyTSg9213p5K
+ * Tema ESCURO é o padrão; o claro é aplicado com <html data-theme="light">.
+ * Todas as combinações texto/fundo atendem WCAG AA (>= 4,5:1) nos dois temas;
+ * bordas de campo e anel de foco >= 3:1.
  */
-:root {
-  --cor-fundo: #f6f7f9;
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --cor-fundo: #08112a; /* surface-100 */
+  --cor-superficie: #0f1a3a; /* surface */
+  --cor-borda: #26345c; /* border — decorativa */
+  --cor-borda-campo: #6b7899; /* field-border — controles, >= 3:1 */
+  --cor-texto: #eef2fb; /* ink */
+  --cor-texto-suave: #a3adc7; /* muted */
+  --cor-destaque: #e6ebf5; /* primary — invertido no escuro */
+  --cor-destaque-hover: #c7d2ec; /* primary-hover */
+  --cor-destaque-texto: #021c4c; /* on-primary */
+  --cor-destaque-suave: #1d2c5a; /* selected */
+  --cor-acento-texto: #ff6b74; /* accent-text — vermelho como texto */
+  --cor-acento-suave: #3a1220; /* accent-soft */
+  --cor-sucesso: #3ccf8e;
+  --cor-sucesso-suave: #0f3328;
+  --cor-info: #8fb0ff;
+  --cor-info-suave: #16264f;
+  --cor-erro: #ff6b74;
+  --cor-erro-suave: #3a1220;
+  --cor-aviso: #f5b84a;
+  --cor-aviso-suave: #33260c;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --cor-fundo: #f5f7fb;
   --cor-superficie: #ffffff;
-  --cor-borda: #d9dde3;
-  --cor-texto: #1b1f24;
-  --cor-texto-suave: #4f5865;
-  --cor-destaque: #1f4fd1;
-  --cor-destaque-hover: #1a43b3;
+  --cor-borda: #d9deea;
+  --cor-borda-campo: #5a6480;
+  --cor-texto: #0f1730;
+  --cor-texto-suave: #5a6480;
+  --cor-destaque: #021c4c;
+  --cor-destaque-hover: #1b3a7a;
   --cor-destaque-texto: #ffffff;
-  --cor-destaque-suave: #e8eefc;
-  --cor-sucesso: #13703a;
-  --cor-sucesso-suave: #e6f4ec;
-  --cor-info: #1f4fd1;
-  --cor-info-suave: #e8eefc;
-  --cor-erro: #b42318;
-  --cor-erro-suave: #fdecea;
+  --cor-destaque-suave: #e6ebf5;
+  --cor-acento-texto: #c40212;
+  --cor-acento-suave: #fdebec;
+  --cor-sucesso: #0f7a4a;
+  --cor-sucesso-suave: #e3f4ec;
+  --cor-info: #1b3a7a;
+  --cor-info-suave: #e6ebf5;
+  --cor-erro: #c40212;
+  --cor-erro-suave: #fdebec;
   --cor-aviso: #8a5a00;
   --cor-aviso-suave: #fff4dc;
-  --raio: 10px;
-  --fonte: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  /* Cores da marca: fixas nos dois temas. */
+  --cor-marca-navy: #021c4c; /* "Speak" do logo */
+  --cor-marca-vermelho: #dd0213; /* "Up" do logo — fundo com texto branco (5,1:1) */
+  --raio: 12px; /* radius-md */
+  --raio-pilula: 999px; /* radius-pill */
+  /* As famílias vêm de next/font em layout.tsx (--fonte-inter, --fonte-montserrat). */
+  --fonte: var(--fonte-inter), system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --fonte-titulo: var(--fonte-montserrat), var(--fonte);
 }
 
 @theme inline {
   --color-fundo: var(--cor-fundo);
   --color-superficie: var(--cor-superficie);
   --color-borda: var(--cor-borda);
+  --color-borda-campo: var(--cor-borda-campo);
   --color-texto: var(--cor-texto);
   --color-suave: var(--cor-texto-suave);
   --color-destaque: var(--cor-destaque);
   --color-destaque-hover: var(--cor-destaque-hover);
   --color-destaque-texto: var(--cor-destaque-texto);
   --color-destaque-suave: var(--cor-destaque-suave);
+  --color-acento: var(--cor-marca-vermelho);
+  --color-acento-texto: var(--cor-acento-texto);
+  --color-acento-suave: var(--cor-acento-suave);
+  --color-marca-navy: var(--cor-marca-navy);
   --color-sucesso: var(--cor-sucesso);
   --color-sucesso-suave: var(--cor-sucesso-suave);
   --color-info: var(--cor-info);
@@ -47,17 +91,23 @@
   --color-aviso: var(--cor-aviso);
   --color-aviso-suave: var(--cor-aviso-suave);
   --radius-padrao: var(--raio);
+  --radius-pilula: var(--raio-pilula);
   --font-sans: var(--fonte);
-}
-
-html {
-  color-scheme: light;
+  --font-titulo: var(--fonte-titulo);
 }
 
 body {
   background: var(--cor-fundo);
   color: var(--cor-texto);
   font-family: var(--fonte);
+}
+
+/* Títulos em Montserrat, pesada e geométrica como o logotipo. */
+h1,
+h2 {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 /* Foco sempre visível para navegação por teclado (H.3). */

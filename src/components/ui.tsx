@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
@@ -10,10 +11,16 @@ export function cx(...c: (string | false | null | undefined)[]) {
 const botaoBase =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-padrao px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60";
 
+/*
+ * primario: ação principal da tela. acento: o único CTA de conversão (vermelho
+ * da marca) — no máximo um por tela. perigo: ações destrutivas (mesmo vermelho,
+ * sempre com rótulo explícito, ex.: "Excluir turma").
+ */
 const variantes = {
   primario: "bg-destaque text-destaque-texto hover:bg-destaque-hover",
-  secundario: "border border-borda bg-superficie text-texto hover:bg-fundo",
-  perigo: "bg-erro text-white hover:opacity-90",
+  acento: "bg-acento text-white hover:brightness-110",
+  secundario: "border border-borda-campo bg-superficie text-texto hover:bg-destaque-suave",
+  perigo: "bg-acento text-white hover:brightness-110",
 } as const;
 
 export function Botao({
@@ -51,8 +58,8 @@ export function Campo({
         aria-invalid={erro ? true : undefined}
         aria-describedby={descricao || undefined}
         className={cx(
-          "min-h-11 rounded-padrao border bg-superficie px-3 text-base",
-          erro ? "border-erro" : "border-borda",
+          "min-h-11 rounded-padrao border bg-superficie px-3 text-base text-texto placeholder:text-suave",
+          erro ? "border-erro" : "border-borda-campo",
           className,
         )}
         {...props}
@@ -89,6 +96,39 @@ export function Alerta({ tipo, children }: { tipo: keyof typeof tiposAlerta; chi
   );
 }
 
+/** Logotipo em texto: "Speak" na cor do texto e "Up" no vermelho da marca. */
+export function Marca({ className, sufixo = true }: { className?: string; sufixo?: boolean }) {
+  return (
+    <span className={cx("inline-flex items-baseline gap-2 font-titulo font-extrabold tracking-tight", className)}>
+      <span>
+        Speak<span className="text-acento-texto">Up</span>
+      </span>
+      {sufixo && (
+        <span className="text-[0.6em] font-bold uppercase tracking-[0.24em] text-suave">Idiomas</span>
+      )}
+    </span>
+  );
+}
+
+/**
+ * Logo oficial (arte para fundo claro). Fica sempre sobre uma placa branca,
+ * para manter o navy legível também no tema escuro.
+ */
+export function Logo({ largura = 220, className, prioridade }: { largura?: number; className?: string; prioridade?: boolean }) {
+  return (
+    <span className={cx("inline-block rounded-padrao bg-white p-3", className)}>
+      <Image
+        src="/logo-speakup.webp"
+        alt="Speak Up Idiomas"
+        width={1394}
+        height={760}
+        priority={prioridade}
+        style={{ width: largura, height: "auto" }}
+      />
+    </span>
+  );
+}
+
 export function Cartao({ className, ...props }: ComponentProps<"section">) {
   return (
     <section
@@ -111,7 +151,7 @@ export function Cabecalho({ titulo, descricao, acao }: { titulo: string; descric
   return (
     <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold">{titulo}</h1>
+        <h1 className="text-2xl">{titulo}</h1>
         {descricao && <p className="mt-1 text-suave">{descricao}</p>}
       </div>
       {acao}
