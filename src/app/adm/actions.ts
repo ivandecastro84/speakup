@@ -90,3 +90,14 @@ export async function criarUsuario(anterior: EstadoForm, dados: FormData): Promi
   revalidatePath("/adm/usuarios");
   return { sucesso: `Usuário ${valores.email} criado.`, versao: (anterior.versao ?? 0) + 1 };
 }
+
+export async function definirEmpresasUsuario(usuarioId: string, anterior: EstadoForm, dados: FormData): Promise<EstadoForm> {
+  const empresas = dados.getAll("empresas").map(String);
+  const ip = await ipCliente();
+  const erro = await tentar(() =>
+    comSessao("ADM", (t) => rpc("adm_definir_empresas_usuario", { p_token: t, p_usuario_id: usuarioId, p_empresas: empresas, p_ip: ip })),
+  );
+  if (erro) return { erro };
+  revalidatePath("/adm/usuarios");
+  return { sucesso: "Empresas atualizadas.", versao: (anterior.versao ?? 0) + 1 };
+}

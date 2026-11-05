@@ -2,7 +2,7 @@
 
 import { Formulario } from "@/components/form";
 import { Campo } from "@/components/ui";
-import { criarUnidade, criarUsuario, entrarAdm, trocarSenhaAdm } from "./actions";
+import { criarUnidade, criarUsuario, definirEmpresasUsuario, entrarAdm, trocarSenhaAdm } from "./actions";
 
 const AJUDA_SENHA_ADM = "Mínimo de 12 caracteres, com maiúscula, minúscula, número e símbolo.";
 
@@ -100,6 +100,34 @@ export function FormCriarUsuario({ unidades }: { unidades: string[] }) {
           </fieldset>
         </>
       )}
+    </Formulario>
+  );
+}
+
+export function FormEmpresasRh({
+  usuarioId,
+  empresas,
+  marcadas,
+}: {
+  usuarioId: string;
+  empresas: { id: string; nome: string }[];
+  marcadas: string[];
+}) {
+  return (
+    <Formulario acao={definirEmpresasUsuario.bind(null, usuarioId)} textoBotao="Salvar empresas" textoPendente="Salvando…" className="flex flex-col gap-3">
+      <fieldset className="flex flex-wrap gap-x-5 gap-y-1">
+        <legend className="sr-only">Empresas que este usuário de RH acompanha</legend>
+        {empresas.length === 0 ? (
+          <p className="text-sm text-suave">Nenhuma empresa cadastrada.</p>
+        ) : (
+          empresas.map((e) => (
+            <label key={e.id} className="flex min-h-11 items-center gap-2 text-sm">
+              <input type="checkbox" name="empresas" value={e.id} defaultChecked={marcadas.includes(e.id)} className="size-5" />
+              {e.nome}
+            </label>
+          ))
+        )}
+      </fieldset>
     </Formulario>
   );
 }

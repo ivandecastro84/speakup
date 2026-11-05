@@ -52,6 +52,12 @@ export default async function TurmaPagina({
           <div className="flex items-center gap-3">
             <Etiqueta tom={ativa ? "sucesso" : "neutro"}>{t.situacao}</Etiqueta>
             <Link
+              href={`/adm/turmas/${t.id}/notas`}
+              className="inline-flex min-h-11 items-center rounded-padrao border border-borda-campo px-4 text-sm font-semibold hover:bg-destaque-suave"
+            >
+              Lançar notas
+            </Link>
+            <Link
               href={`/adm/turmas/${t.id}/chamada`}
               className="inline-flex min-h-11 items-center rounded-padrao bg-destaque px-4 text-sm font-semibold text-destaque-texto"
             >

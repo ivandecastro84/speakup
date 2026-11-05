@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Cabecalho, Cartao, EstadoVazio } from "@/components/ui";
 import { admAtual, chamarAdm } from "./dados";
@@ -20,10 +21,22 @@ export default async function VisaoGeral() {
     return (
       <>
         <Cabecalho titulo={`Olá, ${u.nome.split(" ")[0]}`} />
-        <EstadoVazio
-          titulo="Nenhuma área disponível no momento"
-          descricao="Os relatórios de frequência e notas aparecerão aqui quando forem liberados para o seu perfil."
-        />
+        {u.permissoes.includes("RELATORIOS_LER") ? (
+          <Cartao className="max-w-xl">
+            <h2 className="text-lg">Relatórios de RH</h2>
+            <p className="mt-1 text-sm text-suave">
+              Frequência, notas, evolução CEFR e elegibilidade a benefício dos colaboradores das empresas que você acompanha.
+            </p>
+            <Link
+              href="/adm/relatorios"
+              className="mt-4 inline-flex min-h-11 items-center rounded-padrao bg-destaque px-4 text-sm font-semibold text-destaque-texto"
+            >
+              Abrir relatórios
+            </Link>
+          </Cartao>
+        ) : (
+          <EstadoVazio titulo="Nenhuma área disponível no momento" />
+        )}
       </>
     );
   }

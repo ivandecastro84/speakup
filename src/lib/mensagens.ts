@@ -31,6 +31,8 @@ const MENSAGENS: Record<string, string> = {
   REPOSICAO_NAO_AGENDADA: "Esta reposição não está mais agendada.",
   REPOSICAO_JA_INICIADA: "A aula já começou; não é possível cancelar.",
   TROCA_SENHA_PENDENTE: "Troque a senha inicial antes de continuar.",
+  EMPRESA_JA_EXISTE: "Já existe uma empresa com este nome.",
+  CNPJ_JA_CADASTRADO: "Este CNPJ já está cadastrado.",
   CAMPOS_OBRIGATORIOS: "Preencha todos os campos obrigatórios.",
 };
 

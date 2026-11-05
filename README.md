@@ -76,6 +76,6 @@ values ('voce@empresa.com', 'Seu Nome', extensions.crypt('SUA-SENHA-FORTE', exte
 | K2 | Importação em lote (.xlsx/.csv) | ✅ concluída |
 | K3 | Painel de alunos, turmas, professores e grade | ✅ concluída |
 | K4 | Motor de agendamento e dashboard do aluno | ✅ concluída |
-| K5 | Relatórios de RH e notas | aguardando |
+| K5 | Relatórios de RH e notas | ✅ concluída |
 | K6 | Calendário, notificações e PWA | aguardando |
 | K7 | Endurecimento (RNFs, acessibilidade, carga) | aguardando |

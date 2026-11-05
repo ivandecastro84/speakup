@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Cabecalho, Cartao, EstadoVazio } from "@/components/ui";
-import { FormCriarUsuario } from "../../forms";
+import { FormCriarUsuario, FormEmpresasRh } from "../../forms";
 import { ROTULO_PAPEL, chamarAdm, exigirPermissaoPagina, type UsuarioAdm } from "../dados";
 
 export const metadata: Metadata = { title: "Usuários" };
@@ -16,10 +16,13 @@ interface LinhaUsuario {
 
 export default async function Usuarios() {
   await exigirPermissaoPagina("USUARIOS_GERENCIAR");
-  const [usuarios, unidades] = await Promise.all([
+  const [usuarios, unidades, empresas, empresasRh] = await Promise.all([
     chamarAdm<LinhaUsuario[]>("adm_listar_usuarios"),
     chamarAdm<{ nome: string }[]>("adm_listar_unidades"),
+    chamarAdm<{ id: string; nome: string }[]>("adm_listar_empresas"),
+    chamarAdm<Record<string, string[]>>("adm_empresas_usuarios_rh"),
   ]);
+  const rh = usuarios.filter((x) => x.papel === "ADM_RH");
 
   return (
     <>
@@ -49,7 +52,7 @@ export default async function Usuarios() {
                     <td className="px-5 py-3">{u.email}</td>
                     <td className="px-5 py-3">{ROTULO_PAPEL[u.papel]}</td>
                     <td className="px-5 py-3">
-                      {u.papel === "ADM_SUPERADMIN" ? "Todas" : u.unidades.join(", ") || "—"}
+                      {u.papel === "ADM_SUPERADMIN" ? "Todas" : u.papel === "ADM_RH" ? "Por empresa" : u.unidades.join(", ") || "—"}
                     </td>
                     <td className="px-5 py-3">{u.ativo ? "Ativo" : "Inativo"}</td>
                   </tr>
@@ -58,6 +61,26 @@ export default async function Usuarios() {
             </table>
           )}
         </Cartao>
+        {rh.length > 0 && (
+          <Cartao aria-labelledby="titulo-rh">
+            <h2 id="titulo-rh" className="text-lg">
+              Empresas acompanhadas pelo RH
+            </h2>
+            <p className="mb-4 mt-1 text-sm text-suave">
+              Cada usuário de RH só vê, nos relatórios, os alunos das empresas marcadas aqui.
+            </p>
+            <div className="flex flex-col gap-5">
+              {rh.map((x) => (
+                <div key={x.id} className="rounded-padrao border border-borda p-4">
+                  <p className="mb-2 font-semibold">
+                    {x.nome} <span className="font-normal text-suave">· {x.email}</span>
+                  </p>
+                  <FormEmpresasRh usuarioId={x.id} empresas={empresas} marcadas={empresasRh[x.id] ?? []} />
+                </div>
+              ))}
+            </div>
+          </Cartao>
+        )}
         <Cartao className="max-w-2xl">
           <h2 className="mb-4 text-lg font-semibold">Novo usuário</h2>
           <FormCriarUsuario unidades={unidades.map((u) => u.nome)} />

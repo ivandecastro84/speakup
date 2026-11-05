@@ -11,6 +11,8 @@ const ITENS: { href: string; rotulo: string; permissao?: Permissao }[] = [
   { href: "/adm/professores", rotulo: "Professores", permissao: "GRADE_EDITAR" },
   { href: "/adm/salas", rotulo: "Salas", permissao: "GRADE_EDITAR" },
   { href: "/adm/reposicoes", rotulo: "Reposições", permissao: "GRADE_EDITAR" },
+  { href: "/adm/empresas", rotulo: "Empresas", permissao: "EMPRESAS_GERENCIAR" },
+  { href: "/adm/relatorios", rotulo: "Relatórios de RH", permissao: "RELATORIOS_LER" },
   { href: "/adm/importacoes", rotulo: "Importações", permissao: "ALUNOS_IMPORTAR" },
   { href: "/adm/unidades", rotulo: "Unidades", permissao: "UNIDADES_GERENCIAR" },
   { href: "/adm/usuarios", rotulo: "Usuários", permissao: "USUARIOS_GERENCIAR" },

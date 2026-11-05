@@ -7,6 +7,7 @@ import { COLUNAS } from "@/lib/importacao/colunas";
 import { RpcError } from "@/lib/server/rpc";
 import { admAtual, chamarAdm, exigirPermissaoPagina } from "../../dados";
 import { FormAluno, FormInativar } from "../forms";
+import { FormEmpresaAluno } from "../../empresas/forms";
 
 export const metadata: Metadata = { title: "Aluno" };
 
@@ -45,6 +46,11 @@ export default async function Aluno({
     "adm_reposicoes_aluno",
     { p_id_aluno: idAluno },
   );
+  const gereEmpresas = u.permissoes.includes("EMPRESAS_GERENCIAR");
+  const [empresa, empresas] = await Promise.all([
+    chamarAdm<{ id: string; nome: string; desde: string } | null>("adm_empresa_do_aluno", { p_id_aluno: idAluno }),
+    gereEmpresas ? chamarAdm<{ id: string; nome: string; ativa: boolean }[]>("adm_listar_empresas") : Promise.resolve([]),
+  ]);
   const podeEditar = u.permissoes.includes("ALUNOS_EDITAR");
   const inicial = Object.fromEntries(COLUNAS.map((c) => [c, a[c] == null ? "" : String(a[c])]));
   const status = String(a.status_matricula);
@@ -108,6 +114,16 @@ export default async function Aluno({
                 </dd>
               </div>
             </dl>
+          </Cartao>
+          <Cartao aria-labelledby="titulo-empresa">
+            <h2 id="titulo-empresa" className="mb-3 text-lg">
+              Empresa
+            </h2>
+            {gereEmpresas ? (
+              <FormEmpresaAluno idAluno={idAluno} atual={empresa?.id ?? null} empresas={empresas.filter((e) => e.ativa || e.id === empresa?.id)} />
+            ) : (
+              <p className="text-sm">{empresa ? empresa.nome : "Aluno particular (sem empresa)."}</p>
+            )}
           </Cartao>
           <Cartao aria-labelledby="titulo-turmas">
             <h2 id="titulo-turmas" className="mb-3 text-lg">

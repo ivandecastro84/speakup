@@ -13,7 +13,9 @@ export type Permissao =
   | "ALUNOS_IMPORTAR"
   | "ALUNOS_EDITAR"
   | "GRADE_EDITAR"
-  | "RELATORIOS_LER";
+  | "RELATORIOS_LER"
+  | "EMPRESAS_GERENCIAR"
+  | "NOTAS_LANCAR";
 
 export interface UsuarioAdm {
   id: string;
