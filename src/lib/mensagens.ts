@@ -23,6 +23,14 @@ const MENSAGENS: Record<string, string> = {
   PROFESSOR_EMAIL_EXISTE: "Já existe um professor com este e-mail.",
   SALA_JA_EXISTE: "Já existe uma sala com este nome nesta unidade.",
   TURMA_CODIGO_EXISTE: "Já existe uma turma com este código.",
+  SALDO_ZERO: "Você não tem reposições disponíveis.",
+  LIMITE_MES: "Você atingiu o limite de reposições deste mês.",
+  HORARIO_INDISPONIVEL: "Esse horário acabou de ficar indisponível. Escolha outro.",
+  FORA_DA_JANELA: "Esse horário está fora do período aberto para agendamento.",
+  MATRICULA_INATIVA: "Só alunos com matrícula ativa podem agendar reposições.",
+  REPOSICAO_NAO_AGENDADA: "Esta reposição não está mais agendada.",
+  REPOSICAO_JA_INICIADA: "A aula já começou; não é possível cancelar.",
+  TROCA_SENHA_PENDENTE: "Troque a senha inicial antes de continuar.",
   CAMPOS_OBRIGATORIOS: "Preencha todos os campos obrigatórios.",
 };
 

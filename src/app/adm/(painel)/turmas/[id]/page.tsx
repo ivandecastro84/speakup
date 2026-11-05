@@ -48,7 +48,17 @@ export default async function TurmaPagina({
       <Cabecalho
         titulo={`${t.codigo} · ${t.nome}`}
         descricao={`${t.idioma} ${t.nivel_curso} · ${t.professor} · ${t.horarios.map((h) => rotuloHorario(h.dia, h.hora)).join(", ")}`}
-        acao={<Etiqueta tom={ativa ? "sucesso" : "neutro"}>{t.situacao}</Etiqueta>}
+        acao={
+          <div className="flex items-center gap-3">
+            <Etiqueta tom={ativa ? "sucesso" : "neutro"}>{t.situacao}</Etiqueta>
+            <Link
+              href={`/adm/turmas/${t.id}/chamada`}
+              className="inline-flex min-h-11 items-center rounded-padrao bg-destaque px-4 text-sm font-semibold text-destaque-texto"
+            >
+              Fazer chamada
+            </Link>
+          </div>
+        }
       />
       {salvo && (
         <div className="mb-6">

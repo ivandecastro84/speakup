@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Alerta, Cartao } from "@/components/ui";
-import { alunoAtual } from "./dados";
+import { Alerta, Cartao, EstadoVazio, cx } from "@/components/ui";
+import { CancelarReposicao } from "./cancelar";
+import { alunoAtual, chamarAluno, quando, type Painel } from "./dados";
 
 export const metadata: Metadata = { title: "Início" };
 
-export default async function InicioAluno() {
-  const aluno = await alunoAtual();
+export default async function InicioAluno({ searchParams }: { searchParams: Promise<{ agendado?: string; cancelada?: string }> }) {
+  const [aluno, painel] = await Promise.all([alunoAtual(), chamarAluno<Painel>("aluno_painel")]);
+  const { agendado, cancelada } = await searchParams;
   const primeiroNome = aluno.nome.split(" ")[0];
   const encerrada = aluno.status_matricula === "Cancelada";
+  const proximas = painel.proximas.slice(0, 8);
 
   return (
     <div className="flex flex-col gap-5">
@@ -17,6 +20,11 @@ export default async function InicioAluno() {
         <p className="text-suave">Matrícula {aluno.id_aluno}</p>
       </div>
 
+      {agendado && <Alerta tipo="sucesso">Reposição agendada! Ela já aparece nas suas próximas aulas.</Alerta>}
+      {cancelada === "devolvido" && <Alerta tipo="sucesso">Reposição cancelada. O crédito voltou para o seu saldo.</Alerta>}
+      {cancelada === "consumido" && (
+        <Alerta tipo="aviso">Reposição cancelada fora do prazo: o crédito foi consumido.</Alerta>
+      )}
       {encerrada ? (
         <Alerta tipo="aviso">
           Sua matrícula está encerrada
@@ -24,42 +32,82 @@ export default async function InicioAluno() {
           estudar, procure a secretaria da sua unidade.
         </Alerta>
       ) : (
-        aluno.status_matricula !== "Ativa" && (
-          <Alerta tipo="info">Situação da matrícula: {aluno.status_matricula}.</Alerta>
-        )
+        aluno.status_matricula !== "Ativa" && <Alerta tipo="info">Situação da matrícula: {aluno.status_matricula}.</Alerta>
       )}
 
-      <Cartao aria-labelledby="titulo-matricula">
-        <h2 id="titulo-matricula" className="text-lg font-semibold">
-          Minha matrícula
-        </h2>
-        <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-          <Item rotulo="Situação" valor={aluno.status_matricula} />
-          <Item rotulo="Unidade" valor={aluno.unidade} />
-          <Item rotulo="Curso" valor={aluno.nivel_curso} />
-          <Item rotulo="Modalidade" valor={aluno.modalidade} />
-          <Item rotulo="Turno" valor={aluno.turno} />
-          <Item rotulo="Plano" valor={aluno.plano} />
-        </dl>
+      <Cartao aria-labelledby="titulo-saldo" className="flex items-center justify-between gap-4">
+        <div>
+          <h2 id="titulo-saldo" className="text-sm font-medium text-suave">
+            Reposições disponíveis
+          </h2>
+          <p className="text-4xl font-bold tabular-nums">{painel.saldo}</p>
+          <p className="text-sm text-suave">
+            {painel.creditos[0]
+              ? `A primeira vence em ${formatarData(painel.creditos[0].valido_ate)}.`
+              : "Cada falta registrada gera uma reposição."}{" "}
+            Usadas este mês: {painel.usadas_mes}/{painel.limite_mes}.
+          </p>
+        </div>
       </Cartao>
 
-      <Link
-        href="/aluno/perfil"
-        className="flex min-h-14 items-center justify-between rounded-padrao border border-borda bg-superficie px-5 font-semibold hover:border-destaque"
-      >
-        Perfil
-        <span aria-hidden>→</span>
-      </Link>
+      <nav aria-label="Acesso rápido" className="grid grid-cols-3 gap-3">
+        <Atalho href="/aluno/agendar" titulo="Agendar Aula" destaque />
+        <Atalho href="/aluno/presencas" titulo="Minhas Presenças" />
+        <Atalho href="/aluno/perfil" titulo="Perfil" />
+      </nav>
+
+      <section aria-labelledby="titulo-proximas">
+        <h2 id="titulo-proximas" className="mb-3 text-lg">
+          Próximas aulas
+        </h2>
+        {proximas.length === 0 ? (
+          <EstadoVazio
+            titulo="Nenhuma aula nos próximos dias"
+            descricao={painel.tem_turma ? "Suas aulas e reposições agendadas aparecem aqui." : "Você ainda não está em nenhuma turma."}
+          />
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {proximas.map((a) => (
+              <li key={`${a.tipo}-${a.data}-${a.hora}-${a.reposicao_id ?? a.turma}`}>
+                <Cartao className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-suave">{quando(a.data, a.hora, true)}</p>
+                      <p className="font-semibold">
+                        {a.nome}
+                        {a.tipo === "Reposição" && (
+                          <span className="ml-2 rounded-full bg-info-suave px-2 py-0.5 text-xs font-semibold text-info">Reposição</span>
+                        )}
+                      </p>
+                      <p className="text-sm text-suave">
+                        {a.professor} · {a.modalidade === "Online" ? "Online" : a.sala ?? "Presencial"}
+                      </p>
+                    </div>
+                    {a.tipo === "Reposição" && a.reposicao_id && (
+                      <CancelarReposicao id={a.reposicao_id} gratuito={Boolean(a.cancelamento_gratuito)} antecedencia={painel.antecedencia_horas} />
+                    )}
+                  </div>
+                </Cartao>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }
 
-function Item({ rotulo, valor }: { rotulo: string; valor: string | null }) {
+function Atalho({ href, titulo, destaque }: { href: string; titulo: string; destaque?: boolean }) {
   return (
-    <div>
-      <dt className="text-suave">{rotulo}</dt>
-      <dd className="font-medium">{valor || "—"}</dd>
-    </div>
+    <Link
+      href={href}
+      className={cx(
+        "flex min-h-20 items-center justify-center rounded-padrao border p-3 text-center text-sm font-semibold",
+        destaque ? "border-transparent bg-destaque text-destaque-texto" : "border-borda bg-superficie hover:border-borda-campo",
+      )}
+    >
+      {titulo}
+    </Link>
   );
 }
 

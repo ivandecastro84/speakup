@@ -50,7 +50,7 @@ npm test
 ```
 
 Os testes recriam o banco `speakup_test` do zero a partir das migrações e verificam os critérios de
-aceite (J-A*, J-B*, J-C*, J-H*) e as regras de grade do K3 chamando as RPCs com o papel `anon`, como acontece em produção.
+aceite (J-A*, J-B*, J-C*, J-H*) as regras de grade do K3 e o motor de reposição do K4 (J-D1 a J-D5) chamando as RPCs com o papel `anon`, como acontece em produção.
 
 ## Importação de alunos
 
@@ -75,7 +75,7 @@ values ('voce@empresa.com', 'Seu Nome', extensions.crypt('SUA-SENHA-FORTE', exte
 | K1 | Fundações, autenticação de aluno e ADM, RBAC, auditoria, layout base | ✅ concluída |
 | K2 | Importação em lote (.xlsx/.csv) | ✅ concluída |
 | K3 | Painel de alunos, turmas, professores e grade | ✅ concluída |
-| K4 | Motor de agendamento e dashboard do aluno | aguardando |
+| K4 | Motor de agendamento e dashboard do aluno | ✅ concluída |
 | K5 | Relatórios de RH e notas | aguardando |
 | K6 | Calendário, notificações e PWA | aguardando |
 | K7 | Endurecimento (RNFs, acessibilidade, carga) | aguardando |

@@ -36,7 +36,12 @@ function statusDe(code: string | undefined): number {
  */
 function paraPostgres(v: unknown): unknown {
   if (v === null || v === undefined) return null;
-  if (Array.isArray(v)) return v.some((x) => x !== null && typeof x === "object") ? JSON.stringify(v) : v;
+  // Lista vazia vira null: as RPCs tratam null como "nenhum item" (coalesce),
+  // e assim não há ambiguidade entre text[] e jsonb.
+  if (Array.isArray(v)) {
+    if (v.length === 0) return null;
+    return v.some((x) => x !== null && typeof x === "object") ? JSON.stringify(v) : v;
+  }
   if (typeof v === "object" && !(v instanceof Date)) return JSON.stringify(v);
   return v;
 }

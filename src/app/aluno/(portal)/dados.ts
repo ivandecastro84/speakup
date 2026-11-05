@@ -30,3 +30,39 @@ export interface Aluno {
 export const alunoAtual = cache(() =>
   comSessao("ALUNO", (token) => rpc<Aluno>("aluno_me", { p_token: token })),
 );
+
+export interface ProximaAula {
+  tipo: "Aula" | "Reposição";
+  reposicao_id?: string;
+  data: string;
+  hora: number;
+  turma: string | null;
+  nome: string;
+  professor: string;
+  modalidade: string;
+  sala: string | null;
+  cancelamento_gratuito?: boolean;
+}
+
+export interface Painel {
+  saldo: number;
+  creditos: { valido_ate: string; data_falta: string }[];
+  limite_mes: number;
+  usadas_mes: number;
+  antecedencia_horas: number;
+  tem_turma: boolean;
+  proximas: ProximaAula[];
+}
+
+export function chamarAluno<T>(fn: string, args: Record<string, unknown> = {}) {
+  return comSessao("ALUNO", (token) => rpc<T>(fn, { p_token: token, ...args }));
+}
+
+const DIAS = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
+
+/** "qua, 12/11 · 18h" */
+export function quando(data: string, hora: number, longo = false) {
+  const [a, m, d] = data.split("-").map(Number);
+  const dia = DIAS[new Date(Date.UTC(a, m - 1, d)).getUTCDay()];
+  return `${longo ? dia : dia.slice(0, 3)}, ${String(d).padStart(2, "0")}/${String(m).padStart(2, "0")} · ${String(hora).padStart(2, "0")}h`;
+}

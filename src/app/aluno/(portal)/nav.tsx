@@ -6,6 +6,8 @@ import { cx } from "@/components/ui";
 
 const ITENS = [
   { href: "/aluno", rotulo: "Início" },
+  { href: "/aluno/agendar", rotulo: "Agendar" },
+  { href: "/aluno/presencas", rotulo: "Presenças" },
   { href: "/aluno/perfil", rotulo: "Perfil" },
 ];
 

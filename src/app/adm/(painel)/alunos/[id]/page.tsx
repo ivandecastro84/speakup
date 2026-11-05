@@ -41,6 +41,10 @@ export default async function Aluno({
     throw e;
   }
 
+  const rep = await chamarAdm<{ saldo: number; usadas_mes: number; limite_mes: number; faltas: number; presencas: number }>(
+    "adm_reposicoes_aluno",
+    { p_id_aluno: idAluno },
+  );
   const podeEditar = u.permissoes.includes("ALUNOS_EDITAR");
   const inicial = Object.fromEntries(COLUNAS.map((c) => [c, a[c] == null ? "" : String(a[c])]));
   const status = String(a.status_matricula);
@@ -80,6 +84,31 @@ export default async function Aluno({
         </Cartao>
 
         <div className="flex flex-col gap-6">
+          <Cartao aria-labelledby="titulo-frequencia">
+            <h2 id="titulo-frequencia" className="mb-3 text-lg">
+              Frequência e reposições
+            </h2>
+            <dl className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <dt className="text-suave">Presenças</dt>
+                <dd className="text-xl font-bold tabular-nums">{rep.presencas}</dd>
+              </div>
+              <div>
+                <dt className="text-suave">Faltas</dt>
+                <dd className="text-xl font-bold tabular-nums">{rep.faltas}</dd>
+              </div>
+              <div>
+                <dt className="text-suave">Créditos de reposição</dt>
+                <dd className="text-xl font-bold tabular-nums">{rep.saldo}</dd>
+              </div>
+              <div>
+                <dt className="text-suave">Reposições no mês</dt>
+                <dd className="text-xl font-bold tabular-nums">
+                  {rep.usadas_mes}/{rep.limite_mes}
+                </dd>
+              </div>
+            </dl>
+          </Cartao>
           <Cartao aria-labelledby="titulo-turmas">
             <h2 id="titulo-turmas" className="mb-3 text-lg">
               Turmas
