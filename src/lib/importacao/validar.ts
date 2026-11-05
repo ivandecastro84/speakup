@@ -80,6 +80,22 @@ function idadeEm(nascimento: string, hoje: Date): number {
 }
 
 /**
+ * Valida um único cadastro (formulário do painel) com as MESMAS regras da
+ * importação. Retorna os dados normalizados ou os erros por coluna.
+ */
+export function validarRegistroAluno(original: Partial<Record<Coluna, string>>): {
+  dados: Registro | null;
+  erros: Partial<Record<Coluna, string>>;
+  avisos: string[];
+} {
+  const valores = COLUNAS.map((c) => (original[c] ?? "").trim());
+  const r = validarPlanilha({ cabecalho: [...COLUNAS], linhas: [{ numero: 1, valores }] });
+  const erros: Partial<Record<Coluna, string>> = {};
+  for (const e of r.erros) if (e.coluna && !erros[e.coluna]) erros[e.coluna] = e.motivo;
+  return { dados: r.validas[0]?.dados ?? null, erros, avisos: r.avisos.map((a) => a.motivo) };
+}
+
+/**
  * Valida e normaliza as linhas. Não consulta o banco: escopo de unidade e
  * integridade são reaplicados pela RPC de processamento.
  */

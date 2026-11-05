@@ -6,6 +6,10 @@ import { Logo } from "@/components/ui";
 
 const ITENS: { href: string; rotulo: string; permissao?: Permissao }[] = [
   { href: "/adm", rotulo: "Visão geral" },
+  { href: "/adm/alunos", rotulo: "Alunos", permissao: "ALUNOS_LER" },
+  { href: "/adm/turmas", rotulo: "Turmas", permissao: "GRADE_EDITAR" },
+  { href: "/adm/professores", rotulo: "Professores", permissao: "GRADE_EDITAR" },
+  { href: "/adm/salas", rotulo: "Salas", permissao: "GRADE_EDITAR" },
   { href: "/adm/importacoes", rotulo: "Importações", permissao: "ALUNOS_IMPORTAR" },
   { href: "/adm/unidades", rotulo: "Unidades", permissao: "UNIDADES_GERENCIAR" },
   { href: "/adm/usuarios", rotulo: "Usuários", permissao: "USUARIOS_GERENCIAR" },

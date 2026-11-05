@@ -11,6 +11,8 @@ export interface EstadoForm {
   versao?: number;
   /** valores a reapresentar após erro (React reseta o form após a action) */
   valores?: Record<string, string>;
+  /** erros por campo (nome do campo → mensagem) */
+  erros?: Record<string, string>;
 }
 
 type Acao = (anterior: EstadoForm, dados: FormData) => Promise<EstadoForm>;

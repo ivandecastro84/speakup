@@ -18,10 +18,20 @@ const MENSAGENS: Record<string, string> = {
   SEM_PERMISSAO: "Você não tem permissão para esta ação.",
   IMPORTACAO_NAO_ENCONTRADA: "Importação não encontrada.",
   IMPORTACAO_ENCERRADA: "Esta importação já foi encerrada.",
+  NAO_ENCONTRADO: "Registro não encontrado ou fora do seu escopo.",
+  ALUNO_JA_EXISTE: "Já existe um aluno com esta matrícula.",
+  PROFESSOR_EMAIL_EXISTE: "Já existe um professor com este e-mail.",
+  SALA_JA_EXISTE: "Já existe uma sala com este nome nesta unidade.",
+  TURMA_CODIGO_EXISTE: "Já existe uma turma com este código.",
   CAMPOS_OBRIGATORIOS: "Preencha todos os campos obrigatórios.",
 };
 
+/** Erros de regra que já trazem o texto para o usuário depois de "CODIGO:". */
+const COM_DETALHE = new Set(["CONFLITO", "INVALIDO"]);
+
 export function mensagemErro(codigoOuMensagem: string | undefined): string {
-  const codigo = (codigoOuMensagem ?? "").split(":")[0];
+  const texto = codigoOuMensagem ?? "";
+  const codigo = texto.split(":")[0];
+  if (COM_DETALHE.has(codigo)) return texto.slice(codigo.length + 1);
   return MENSAGENS[codigo] ?? "Não foi possível concluir a operação. Tente novamente.";
 }
