@@ -25,7 +25,7 @@ export type Coluna = (typeof COLUNAS)[number];
 
 export const OBRIGATORIAS: Coluna[] = ["id_aluno", "nome", "email", "unidade", "status_matricula"];
 
-export const MODALIDADES = ["Presencial", "Online"] as const;
+export const MODALIDADES = ["Presencial", "Online", "Híbrido"] as const;
 export const TURNOS = ["Manhã", "Tarde", "Noite"] as const;
 export const STATUS = ["Ativa", "Cancelada", "Trancada", "Concluída"] as const;
 

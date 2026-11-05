@@ -175,6 +175,15 @@ describe("K4 · Motor de agendamento", () => {
     expect(opcoes(14).every((o) => o.length === 1 && o[0].tipo === "TURMA" && o[0].professor === "Prof C")).toBe(true);
   });
 
+  it("aluno Híbrido sem sala livre recebe aula avulsa online", async () => {
+    await professor("Prof H", TODOS_OS_DIAS(12));
+    await db.query("update app.alunos set modalidade = 'Híbrido' where id_aluno = 'A001'");
+    const tok = await comCredito("A001");
+    const c = await rpc<Catalogo>("aluno_catalogo_reposicao", { p_token: tok });
+    const op = c.dias.flatMap((d) => d.horarios.filter((h) => h.hora === 12).map((h) => h.opcoes[0]))[0];
+    expect(op).toMatchObject({ tipo: "AVULSA", professor: "Prof H", modalidade: "Online" });
+  });
+
   it("J-D3: agendar reserva o crédito (saldo −1) e a reposição aparece nas próximas aulas", async () => {
     const tok = await comCredito("A001");
     const data = await diaUtil("futuro", 20);

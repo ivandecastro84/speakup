@@ -139,6 +139,19 @@ describe("K2 · Importação em lote", () => {
     );
   });
 
+  it("aceita modalidade Híbrido (com ou sem acento) e calcula a idade pela data de nascimento", async () => {
+    const t = await coord();
+    const hoje = new Date();
+    const ano = hoje.getUTCFullYear() - 20;
+    // aniversário daqui a 2 dias: a planilha (que calcula só pelo ano) diria 20, o correto é 19
+    const futuro = new Date(Date.UTC(ano, hoje.getUTCMonth(), hoje.getUTCDate() + 2)).toISOString().slice(0, 10);
+    const bytes = await xlsx([aluno("HB1", { modalidade: "Hibrido", data_nascimento: futuro, idade: "20" })]);
+    const lote = await importarArquivo(t, { nome: "hibrido.xlsx", bytes });
+    expect(lote).toMatchObject({ inseridos: 1, rejeitados: 0, avisos: 0 });
+    const { rows } = await db.query("select modalidade, idade from app.alunos where id_aluno = 'HB1'");
+    expect(rows[0]).toEqual({ modalidade: "Híbrido", idade: 19 });
+  });
+
   it("avisos não bloqueantes: idade divergente e Cancelada sem data de cancelamento", async () => {
     const t = await coord();
     const bytes = await xlsx([

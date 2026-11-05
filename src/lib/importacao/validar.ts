@@ -68,8 +68,13 @@ function dataReal(v: string): boolean {
   return dt.getUTCFullYear() === a && dt.getUTCMonth() === me - 1 && dt.getUTCDate() === d && a >= 1900 && a <= 2100;
 }
 
+/** Comparação sem diferenciar maiúsculas nem acentos ("hibrido" → "Híbrido", "manha" → "Manhã"). */
+function simplificar(v: string): string {
+  return v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+}
+
 function canonico(valor: string, opcoes: readonly string[]): string | null {
-  return opcoes.find((o) => o.toLocaleLowerCase("pt-BR") === valor.toLocaleLowerCase("pt-BR")) ?? null;
+  return opcoes.find((o) => simplificar(o) === simplificar(valor)) ?? null;
 }
 
 function idadeEm(nascimento: string, hoje: Date): number {
@@ -178,17 +183,19 @@ export function validarPlanilha(p: Planilha, hoje = new Date()): ResultadoValida
       continue;
     }
 
-    // Avisos não bloqueantes
-    if (dados.idade !== null && original.data_nascimento) {
+    // Idade: com data de nascimento, grava a idade calculada. Só avisa quando a
+    // informada difere em mais de 1 ano (planilhas costumam calcular só pelo ano).
+    if (original.data_nascimento) {
       const calculada = idadeEm(original.data_nascimento, hoje);
-      if (calculada !== dados.idade) {
+      if (dados.idade !== null && Math.abs(calculada - Number(dados.idade)) > 1) {
         avisos.push({
           linha: numero,
           coluna: "idade",
-          motivo: `Idade informada (${dados.idade}) diverge da data de nascimento (${calculada} anos).`,
+          motivo: `Idade informada (${dados.idade}) diverge da data de nascimento (${calculada} anos); foi gravada a idade calculada.`,
           dados: original,
         });
       }
+      dados.idade = calculada;
     }
     if (dados.status_matricula === "Cancelada" && !original.data_cancelamento) {
       avisos.push({
