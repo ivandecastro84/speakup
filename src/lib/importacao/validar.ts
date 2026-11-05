@@ -101,10 +101,25 @@ export function validarRegistroAluno(original: Partial<Record<Coluna, string>>):
 }
 
 /**
+ * O log de erros baixado do sistema tem as 19 colunas + "motivo" no fim.
+ * Para permitir corrigir e reenviar o próprio log, essa última coluna é
+ * descartada (somente se for exatamente "motivo" e estiver na 20ª posição).
+ */
+function semColunaMotivo(p: Planilha): Planilha {
+  const cab = p.cabecalho;
+  if (cab.length !== COLUNAS.length + 1 || cab[cab.length - 1].trim().toLowerCase() !== "motivo") return p;
+  return {
+    cabecalho: cab.slice(0, COLUNAS.length),
+    linhas: p.linhas.map((l) => ({ numero: l.numero, valores: l.valores.slice(0, COLUNAS.length) })),
+  };
+}
+
+/**
  * Valida e normaliza as linhas. Não consulta o banco: escopo de unidade e
  * integridade são reaplicados pela RPC de processamento.
  */
-export function validarPlanilha(p: Planilha, hoje = new Date()): ResultadoValidacao {
+export function validarPlanilha(entrada: Planilha, hoje = new Date()): ResultadoValidacao {
+  const p = semColunaMotivo(entrada);
   const errosArquivo = validarCabecalho(p.cabecalho);
   const total = p.linhas.length;
   if (errosArquivo.length) return { errosArquivo, validas: [], erros: [], avisos: [], total };

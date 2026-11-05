@@ -152,6 +152,21 @@ describe("K2 · Importação em lote", () => {
     expect(rows[0]).toEqual({ modalidade: "Híbrido", idade: 19 });
   });
 
+  it("aceita reimportar o próprio log de erros (19 colunas + motivo)", async () => {
+    const t = await coord();
+    const lote = await importarArquivo(t, { nome: "x.xlsx", bytes: await xlsx([aluno("LG1", { modalidade: "Remoto" })]) });
+    expect(lote.rejeitados).toBe(1);
+    const csvLog = gerarLogCsv(await log(t, lote.id));
+    const corrigido = csvLog.replace(";Remoto;", ";Online;");
+    const de_novo = await importarArquivo(t, { nome: "log-corrigido.csv", bytes: new TextEncoder().encode(corrigido) });
+    expect(de_novo).toMatchObject({ status: "CONCLUIDA", inseridos: 1, rejeitados: 0 });
+
+    // outra coluna extra continua sendo rejeitada
+    const extra = csvLog.replace(";motivo", ";observacao");
+    const r = await importarArquivo(t, { nome: "extra.csv", bytes: new TextEncoder().encode(extra) });
+    expect(r.status).toBe("REJEITADA");
+  });
+
   it("avisos não bloqueantes: idade divergente e Cancelada sem data de cancelamento", async () => {
     const t = await coord();
     const bytes = await xlsx([
