@@ -126,3 +126,62 @@ h2 {
   outline: 3px solid var(--cor-destaque);
   outline-offset: 2px;
 }
+
+/* Memory Game (área do aluno): cartas que viram em 3D e destaque do que foi re-renderizado. */
+.memoria-carta {
+  perspective: 700px;
+}
+.memoria-giro {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.3, 1.2);
+}
+.memoria-carta[data-aberta="true"] .memoria-giro {
+  transform: rotateY(180deg);
+}
+.memoria-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.memoria-frente {
+  transform: rotateY(180deg);
+}
+@keyframes memoria-pulso {
+  0% {
+    box-shadow: 0 0 0 0 rgb(250 204 21 / 0.9);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgb(250 204 21 / 0);
+  }
+}
+.memoria-render {
+  animation: memoria-pulso 0.8s ease-out;
+}
+@keyframes memoria-erro {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+.memoria-tremer {
+  animation: memoria-erro 0.3s ease-in-out 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .memoria-giro {
+    transition: none;
+  }
+  .memoria-render,
+  .memoria-tremer {
+    animation: none;
+  }
+}

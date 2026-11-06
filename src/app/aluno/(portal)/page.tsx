@@ -55,11 +55,28 @@ export default async function InicioAluno({ searchParams }: { searchParams: Prom
         <Atalho href="/aluno/presencas" titulo="Minhas Presenças" />
         <Atalho href="/aluno/perfil" titulo="Perfil" />
         <Link
-          href="/aluno/dicas"
-          className="col-span-3 flex min-h-16 flex-col justify-center rounded-padrao border border-borda bg-superficie px-4 py-3 hover:border-borda-campo"
+          href="/aluno/memory-game"
+          className="col-span-3 flex min-h-20 items-center gap-4 rounded-padrao bg-linear-to-r from-fuchsia-500 via-violet-500 to-sky-500 px-4 py-3 text-white shadow-lg transition hover:brightness-110 active:scale-[0.99]"
         >
-          <span className="font-semibold">Dicas para melhorar o inglês</span>
-          <span className="text-sm text-suave">Exemplos práticos com tradução</span>
+          <span aria-hidden="true" className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/20 text-2xl">
+            🧠
+          </span>
+          <span className="flex flex-col">
+            <span className="text-lg font-bold">Memory Game</span>
+            <span className="text-sm text-white/90">Encontre os pares inglês–português e some pontos</span>
+          </span>
+        </Link>
+        <Link
+          href="/aluno/dicas"
+          className="col-span-3 flex min-h-20 items-center gap-4 rounded-padrao bg-linear-to-r from-amber-400 via-orange-500 to-pink-500 px-4 py-3 text-white shadow-lg transition hover:brightness-110 active:scale-[0.99]"
+        >
+          <span aria-hidden="true" className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/20 text-2xl">
+            💡
+          </span>
+          <span className="flex flex-col">
+            <span className="text-lg font-bold">Dicas para melhorar o inglês</span>
+            <span className="text-sm text-white/90">Exemplos práticos com tradução</span>
+          </span>
         </Link>
       </nav>
 
