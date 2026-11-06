@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Cartao } from "@/components/ui";
+import { chavePublicaVapid } from "@/lib/integracoes/adaptadores";
+import { AtivarPush } from "./push";
 import { FormAlterarSenhaAluno } from "../../forms";
 import { alunoAtual, type Aluno } from "../dados";
 
@@ -53,6 +55,15 @@ export default async function Perfil() {
             </div>
           ))}
         </dl>
+      </Cartao>
+      <Cartao aria-labelledby="titulo-push">
+        <h2 id="titulo-push" className="text-lg font-semibold">
+          Avisos no celular
+        </h2>
+        <p className="mb-4 mt-1 text-sm text-suave">
+          Receba um aviso quando uma reposição for confirmada ou cancelada. Os e-mails continuam chegando normalmente.
+        </p>
+        <AtivarPush chavePublica={chavePublicaVapid()} />
       </Cartao>
       <Cartao aria-labelledby="titulo-senha">
         <h2 id="titulo-senha" className="mb-4 text-lg font-semibold">

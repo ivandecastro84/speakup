@@ -77,5 +77,5 @@ values ('voce@empresa.com', 'Seu Nome', extensions.crypt('SUA-SENHA-FORTE', exte
 | K3 | Painel de alunos, turmas, professores e grade | ✅ concluída |
 | K4 | Motor de agendamento e dashboard do aluno | ✅ concluída |
 | K5 | Relatórios de RH e notas | ✅ concluída |
-| K6 | Calendário, notificações e PWA | aguardando |
+| K6 | Calendário, notificações e PWA | concluído |
 | K7 | Endurecimento (RNFs, acessibilidade, carga) | aguardando |

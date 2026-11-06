@@ -82,6 +82,14 @@ export default async function InicioAluno({ searchParams }: { searchParams: Prom
                       <p className="text-sm text-suave">
                         {a.professor} · {a.modalidade === "Online" ? "Online" : a.sala ?? "Presencial"}
                       </p>
+                      {a.tipo === "Reposição" && a.reposicao_id && (
+                        <a
+                          href={`/api/aluno/reposicoes/${a.reposicao_id}/convite`}
+                          className="mt-1 inline-flex min-h-11 items-center text-sm font-medium underline"
+                        >
+                          Adicionar à agenda (.ics)
+                        </a>
+                      )}
                     </div>
                     {a.tipo === "Reposição" && a.reposicao_id && (
                       <CancelarReposicao id={a.reposicao_id} gratuito={Boolean(a.cancelamento_gratuito)} antecedencia={painel.antecedencia_horas} />

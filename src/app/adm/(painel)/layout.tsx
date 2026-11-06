@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { after } from "next/server";
+import { processarFilaSilencioso } from "@/lib/integracoes/fila";
+import { lerSessao } from "@/lib/server/session";
 import { ROTULO_PAPEL, admAtual, type Permissao } from "./dados";
 import { MenuLateral } from "./menu";
 import { AlternarTema } from "@/components/tema";
@@ -13,6 +16,7 @@ const ITENS: { href: string; rotulo: string; permissao?: Permissao }[] = [
   { href: "/adm/reposicoes", rotulo: "Reposições", permissao: "GRADE_EDITAR" },
   { href: "/adm/empresas", rotulo: "Empresas", permissao: "EMPRESAS_GERENCIAR" },
   { href: "/adm/relatorios", rotulo: "Relatórios de RH", permissao: "RELATORIOS_LER" },
+  { href: "/adm/integracoes", rotulo: "Notificações e agenda", permissao: "NOTIFICACOES_GERENCIAR" },
   { href: "/adm/importacoes", rotulo: "Importações", permissao: "ALUNOS_IMPORTAR" },
   { href: "/adm/unidades", rotulo: "Unidades", permissao: "UNIDADES_GERENCIAR" },
   { href: "/adm/usuarios", rotulo: "Usuários", permissao: "USUARIOS_GERENCIAR" },
@@ -22,6 +26,12 @@ const ITENS: { href: string; rotulo: string; permissao?: Permissao }[] = [
 
 export default async function LayoutPainel({ children }: { children: React.ReactNode }) {
   const u = await admAtual();
+  // Retentativas pendentes da fila de integrações são processadas a cada
+  // acesso ao painel, depois da resposta (não atrasa a navegação).
+  if (u.permissoes.includes("NOTIFICACOES_GERENCIAR")) {
+    const s = await lerSessao("ADM");
+    if (s) after(() => processarFilaSilencioso(s.tok));
+  }
   const itens = ITENS.filter((i) => !i.permissao || u.permissoes.includes(i.permissao)).map(
     ({ href, rotulo }) => ({ href, rotulo }),
   );

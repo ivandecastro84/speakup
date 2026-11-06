@@ -15,7 +15,8 @@ export type Permissao =
   | "GRADE_EDITAR"
   | "RELATORIOS_LER"
   | "EMPRESAS_GERENCIAR"
-  | "NOTAS_LANCAR";
+  | "NOTAS_LANCAR"
+  | "NOTIFICACOES_GERENCIAR";
 
 export interface UsuarioAdm {
   id: string;

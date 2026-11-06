@@ -19,6 +19,8 @@ const MENSAGENS: Record<string, string> = {
   IMPORTACAO_NAO_ENCONTRADA: "Importação não encontrada.",
   IMPORTACAO_ENCERRADA: "Esta importação já foi encerrada.",
   NAO_ENCONTRADO: "Registro não encontrado ou fora do seu escopo.",
+  INSCRICAO_INVALIDA: "Não foi possível registrar este aparelho para receber avisos.",
+  FILA_INVALIDA: "Fila de integração inválida.",
   ALUNO_JA_EXISTE: "Já existe um aluno com esta matrícula.",
   PROFESSOR_EMAIL_EXISTE: "Já existe um professor com este e-mail.",
   SALA_JA_EXISTE: "Já existe uma sala com este nome nesta unidade.",

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat } from "next/font/google";
+import { RegistrarServiceWorker } from "@/components/pwa";
 import { scriptTema } from "@/components/tema";
 import "./globals.css";
 
@@ -14,6 +15,9 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: { default: "Speak Up Idiomas", template: "%s · Speak Up Idiomas" },
   description: "Gestão acadêmica e operacional da Speak Up Idiomas.",
+  applicationName: "Speak Up Idiomas",
+  appleWebApp: { capable: true, title: "Speak Up", statusBarStyle: "black-translucent" },
+  icons: { icon: "/favicon.ico", apple: "/icones/apple-180.png" },
 };
 
 export const viewport: Viewport = {
@@ -28,7 +32,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script dangerouslySetInnerHTML={{ __html: scriptTema }} />
       </head>
-      <body className="min-h-dvh antialiased">{children}</body>
+      <body className="min-h-dvh antialiased">
+        {children}
+        <RegistrarServiceWorker />
+      </body>
     </html>
   );
 }

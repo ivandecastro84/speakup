@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+import { processarFilaSilencioso } from "@/lib/integracoes/fila";
 import { mensagemErro } from "@/lib/mensagens";
 import { RpcError, rpc } from "@/lib/server/rpc";
 import { comSessao, ipCliente } from "@/lib/server/session";
@@ -15,16 +17,17 @@ export async function agendarReposicao(escolha: {
 }): Promise<ResultadoAcao> {
   const ip = await ipCliente();
   try {
-    await comSessao("ALUNO", (t) =>
-      rpc("aluno_agendar_reposicao", {
+    await comSessao("ALUNO", (t) => {
+      after(() => processarFilaSilencioso(t));
+      return rpc("aluno_agendar_reposicao", {
         p_token: t,
         p_data: escolha.data,
         p_hora: escolha.hora,
         p_tipo: escolha.tipo,
         p_turma_id: escolha.turmaId,
         p_ip: ip,
-      }),
-    );
+      });
+    });
   } catch (e) {
     if (e instanceof RpcError) return { ok: false, erro: mensagemErro(e.message) };
     throw e;
@@ -36,9 +39,10 @@ export async function agendarReposicao(escolha: {
 export async function cancelarReposicao(id: string): Promise<ResultadoAcao> {
   const ip = await ipCliente();
   try {
-    const r = await comSessao("ALUNO", (t) =>
-      rpc<{ credito_devolvido: boolean }>("aluno_cancelar_reposicao", { p_token: t, p_reposicao_id: id, p_ip: ip }),
-    );
+    const r = await comSessao("ALUNO", (t) => {
+      after(() => processarFilaSilencioso(t));
+      return rpc<{ credito_devolvido: boolean }>("aluno_cancelar_reposicao", { p_token: t, p_reposicao_id: id, p_ip: ip });
+    });
     revalidatePath("/aluno", "layout");
     return {
       ok: true,
