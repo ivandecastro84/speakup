@@ -54,6 +54,13 @@ export default async function InicioAluno({ searchParams }: { searchParams: Prom
         <Atalho href="/aluno/agendar" titulo="Agendar Aula" destaque />
         <Atalho href="/aluno/presencas" titulo="Minhas Presenças" />
         <Atalho href="/aluno/perfil" titulo="Perfil" />
+        <Link
+          href="/aluno/dicas"
+          className="col-span-3 flex min-h-16 flex-col justify-center rounded-padrao border border-borda bg-superficie px-4 py-3 hover:border-borda-campo"
+        >
+          <span className="font-semibold">Dicas para melhorar o inglês</span>
+          <span className="text-sm text-suave">Exemplos práticos com tradução</span>
+        </Link>
       </nav>
 
       <section aria-labelledby="titulo-proximas">
