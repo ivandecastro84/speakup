@@ -78,4 +78,5 @@ values ('voce@empresa.com', 'Seu Nome', extensions.crypt('SUA-SENHA-FORTE', exte
 | K4 | Motor de agendamento e dashboard do aluno | ✅ concluída |
 | K5 | Relatórios de RH e notas | ✅ concluída |
 | K6 | Calendário, notificações e PWA | concluído |
+| — | API de notas para empresas parceiras (D59–D63) | concluído |
 | K7 | Endurecimento (RNFs, acessibilidade, carga) | aguardando |
