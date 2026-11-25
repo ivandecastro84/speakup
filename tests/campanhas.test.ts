@@ -15,7 +15,7 @@ afterAll(async () => {
   await db.end();
 });
 beforeEach(async () => {
-  await db.query("truncate app.campanhas_retencao, app.churn_previsao");
+  await db.query("truncate app.campanha_interesses, app.campanhas_retencao, app.churn_previsao");
   await semearK1(db);
   sup = (await rpc<{ token: string }>("adm_login", { p_email: "super@speakup.test", p_senha: SENHA_ADM })).token;
 });
