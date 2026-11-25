@@ -30,6 +30,7 @@ const MENSAGENS: Record<string, string> = {
   HORARIO_INDISPONIVEL: "Esse horário acabou de ficar indisponível. Escolha outro.",
   FORA_DA_JANELA: "Esse horário está fora do período aberto para agendamento.",
   MATRICULA_INATIVA: "Só alunos com matrícula ativa podem agendar reposições.",
+  OFERTA_INDISPONIVEL: "Esta oferta não está mais disponível para você.",
   REPOSICAO_NAO_AGENDADA: "Esta reposição não está mais agendada.",
   REPOSICAO_JA_INICIADA: "A aula já começou; não é possível cancelar.",
   TROCA_SENHA_PENDENTE: "Troque a senha inicial antes de continuar.",

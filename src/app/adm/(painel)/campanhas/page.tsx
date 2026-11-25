@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Campanhas de Retenção" };
 interface Campanha {
   id: string; nome: string; churn_minimo: number; churn_maximo: number; desconto_percentual: number;
   titulo_oferta: string; mensagem: string; data_inicio: string; data_fim: string; ativa: boolean;
-  alunos_na_faixa: number; vigencia: "agendada" | "em vigor" | "encerrada";
+  alunos_na_faixa: number; interessados: number; vigencia: "agendada" | "em vigor" | "encerrada";
 }
 
 const br = (d: string) => d.split("-").reverse().join("/");
@@ -53,10 +53,18 @@ export default async function Campanhas({ searchParams }: { searchParams: Promis
                     <Etiqueta tom={c.ativa ? "sucesso" : "neutro"}>{c.ativa ? "Ativa" : "Inativa"}</Etiqueta>
                     <Etiqueta tom={c.vigencia === "em vigor" ? "info" : c.vigencia === "agendada" ? "aviso" : "neutro"}>{c.vigencia}</Etiqueta>
                   </div>
-                  <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-4">
+                  <dl className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-5">
                     <div><dt className="text-suave">Faixa de churn</dt><dd className="font-semibold">{descreverFaixa(c.churn_minimo, c.churn_maximo)}</dd></div>
                     <div><dt className="text-suave">Alunos na faixa</dt><dd className="text-2xl font-bold tabular-nums">{Number(c.alunos_na_faixa).toLocaleString("pt-BR")}</dd></div>
                     <div><dt className="text-suave">Desconto</dt><dd className="font-semibold">{num(c.desconto_percentual)}%</dd></div>
+                    <div>
+                      <dt className="text-suave">Interessados</dt>
+                      <dd>
+                        <Link href={`/adm/campanhas/${c.id}#interessados`} className="text-2xl font-bold tabular-nums underline">
+                          {Number(c.interessados).toLocaleString("pt-BR")}
+                        </Link>
+                      </dd>
+                    </div>
                     <div><dt className="text-suave">Período</dt><dd className="font-semibold">{br(c.data_inicio)} a {br(c.data_fim)}</dd></div>
                   </dl>
                   <div className="rounded-padrao bg-fundo p-3 text-sm">

@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Alerta, Cartao, EstadoVazio, cx } from "@/components/ui";
+import { personalizarMensagem } from "@/lib/campanhas";
+import { RpcError } from "@/lib/server/rpc";
 import { CancelarReposicao } from "./cancelar";
+import { CartaoOferta, type Oferta } from "./oferta";
 import { alunoAtual, chamarAluno, quando, type Painel } from "./dados";
 
 export const metadata: Metadata = { title: "Início" };
 
 export default async function InicioAluno({ searchParams }: { searchParams: Promise<{ agendado?: string; cancelada?: string }> }) {
-  const [aluno, painel] = await Promise.all([alunoAtual(), chamarAluno<Painel>("aluno_painel")]);
+  const [aluno, painel, oferta] = await Promise.all([
+    alunoAtual(),
+    chamarAluno<Painel>("aluno_painel"),
+    chamarAluno<Oferta | null>("aluno_oferta_retencao").catch((e) => {
+      if (e instanceof RpcError) return null; // a oferta nunca derruba o Início
+      throw e;
+    }),
+  ]);
   const { agendado, cancelada } = await searchParams;
   const primeiroNome = aluno.nome.split(" ")[0];
   const encerrada = aluno.status_matricula === "Cancelada";
@@ -19,6 +29,16 @@ export default async function InicioAluno({ searchParams }: { searchParams: Prom
         <h1 className="text-2xl font-bold">Olá, {primeiroNome}</h1>
         <p className="text-suave">Matrícula {aluno.id_aluno}</p>
       </div>
+
+      {oferta && (
+        <CartaoOferta
+          oferta={{
+            ...oferta,
+            titulo: personalizarMensagem(oferta.titulo, aluno.nome),
+            mensagem: personalizarMensagem(oferta.mensagem, aluno.nome),
+          }}
+        />
+      )}
 
       {agendado && <Alerta tipo="sucesso">Reposição agendada! Ela já aparece nas suas próximas aulas.</Alerta>}
       {cancelada === "devolvido" && <Alerta tipo="sucesso">Reposição cancelada. O crédito voltou para o seu saldo.</Alerta>}
