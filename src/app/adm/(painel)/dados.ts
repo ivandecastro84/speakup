@@ -17,7 +17,8 @@ export type Permissao =
   | "EMPRESAS_GERENCIAR"
   | "NOTAS_LANCAR"
   | "NOTIFICACOES_GERENCIAR"
-  | "CHURN_GERENCIAR";
+  | "CHURN_GERENCIAR"
+  | "CAMPANHAS_GERENCIAR";
 
 export interface UsuarioAdm {
   id: string;
